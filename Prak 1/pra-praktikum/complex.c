@@ -15,8 +15,7 @@ void CreateComplex(COMPLEX *C, float Re, float Im) {
 void BacaCOMPLEX(COMPLEX *C) {
     float Re, Im;
     scanf("%f %f", &Re,&Im);
-    Real(*C) = Re;
-    Imag(*C) = Im;
+    CreateComplex(C, Re, Im);
 }
 
 void TulisCOMPLEX(COMPLEX C) {

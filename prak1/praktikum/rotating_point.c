@@ -1,5 +1,4 @@
 #include "rotating_point.h"
-#include "complex.c"
 #include <stdio.h>
 
 /* Catatan: Hasil perkalian float dan int adalah float*/
@@ -9,36 +8,34 @@
 COMPLEX PowerCOMPLEX(COMPLEX C, int p) {
     COMPLEX Chasil = C;
     int i;
-    for (i = 1; i < p; i++) {
-        Chasil = MultiplyCOMPLEX(Chasil,C);
+    for (i = 0; i < p; i++) {
+        C = MultiplyCOMPLEX(C,Chasil);
     }
     return Chasil;
 };
 
 void TransformPointByComplexPower(POINT *P, COMPLEX C, int n) {
     COMPLEX pC = C;
-    int i =0;
+    int i;
     float x,y;
-    while (i < n && x*x+y*y <= 1) {
+
+    if (n == 0) {
+        printf("Titik keluar dari lingkaran pada iterasi ke 0");
+        return;
+    }
+
+    for (i=1; i<=n; i++) {
         x = Absis(*P);
         y = Ordinat(*P);
-        pC = PowerCOMPLEX(pC,i);
-        Absis(*P) = x * Real(pC) - y*Imag(pC);
-        Ordinat(*P) = x * Real(pC) - y*Imag(pC);
-        i++;
+        Absis(*P)= x * Real(C) - y*Imag(C);
+        Ordinat(*P) = x * Imag(C) + y*Real(C);
+        C = MultiplyCOMPLEX(C,pC);
+        if (Jarak0(*P) >= 1) {
+            printf("Titik keluar dari lingkaran pada iterasi ke %d", i);
+            return;
+        }
     }
-    if (x*x+y*y > 1) {
-        printf("Titik keluar dari lingkaran pada iterasi ke %d",i+1);
-    } else {
-        printf("Titik tetap berada di dalam lingkaran setelah %d iterasi",i);
+        printf("Titik tetap berada di dalam lingkaran setelah %d iterasi",n);
     }
     
-};
-
-int main() {
-    POINT P = {0.5,0.5};
-    COMPLEX C = {1.0,0.5};
-    int n = 2;
-    TransformPointByComplexPower(&P,C,n);
-}
 

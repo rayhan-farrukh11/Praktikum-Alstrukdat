@@ -13,8 +13,8 @@ boolean IsCIRCLEValid(float X, float Y, float R) {
 
 /* *** Konstruktor: Membentuk Lingkaran C dari titik pusat dan radius *** */
 void CreateCIRCLE(CIRCLE *C, float X, float Y, float R) {
-    POINT P = Center(*C);
-    Center(*C) = P;
+    Center(*C).X = X;
+    Center(*C).Y = Y;
     Radius(*C) = R;
 };
 /* Membentuk sebuah CIRCLE dari komponen-komponen yang valid */
@@ -27,7 +27,7 @@ void ReadCIRCLE(CIRCLE *C) {
     float X,Y,R;
     scanf("%f %f %f", &X,&Y,&R);
     while (!(IsCIRCLEValid(X,Y,R))) {
-        printf("CIRLCE tidak valid\n");
+        printf("CIRCLE tidak valid\n");
         scanf("%f %f %f", &X,&Y,&R);
     }
     CreateCIRCLE(C, X, Y, R);
@@ -43,7 +43,7 @@ void ReadCIRCLE(CIRCLE *C) {
  */
 
 void WriteCIRCLE(CIRCLE C) {
-    printf("P(%.2f,%.2f)r=%.2f",Absis(Center(C)),Ordinat(Center(C)),Radius(C));
+    printf("P(%.2f,%.2f) r=%.2f",Absis(Center(C)),Ordinat(Center(C)),Radius(C));
 };
 /**
  * I.S. : C sembarang
@@ -69,29 +69,30 @@ float Area(CIRCLE C) {
 /* KELOMPOK OPERASI LAIN TERHADAP TYPE                               */
 /* ***************************************************************** */
 boolean IsPOINTInsideCIRCLE(CIRCLE C, POINT P) {
-    float jarakAbsis = C.CENTER.X - Absis(P);
-    float jarakOrdinat = C.CENTER.Y - Ordinat(P);
-    float jarak = sqrt((jarakAbsis)*(jarakAbsis) + (jarakOrdinat)*(jarakOrdinat));
-    return (jarak < Radius(C));
+    return (Panjang(Center(C), P) < Radius(C));
 };
 /* Mengirim true jika titik P berada di dalam lingkaran C */
 
 boolean IsPOINTInEdgeCIRCLE(CIRCLE C, POINT P) {
-    return (Panjang(Center(C),P) == Radius(C));
+
+    float tolerance = 0.0001;
+    return fabs(Panjang(Center(C), P) - Radius(C)) < tolerance;
 };
 /* Mengirim true jika titik P berada di tepi lingkaran C */
 /* HINT: Gunakan toleransi kecil untuk komparasi float */
 
 boolean IsCIRCLEInsideCIRCLE(CIRCLE C1, CIRCLE C2) {
-    float distance = sqrt((C1.CENTER.X - C2.CENTER.X) * (C1.CENTER.X - C2.CENTER.X) + (C1.CENTER.Y - C2.CENTER.Y) * (C1.CENTER.Y - C2.CENTER.Y));
-    return (distance + C1.R <= C2.R) || (distance + C2.R <= C1.R);
+    float distance = Panjang(Center(C1),Center(C2));
+    return (distance < fabs(C1.R - C2.R));
 
 };
 /* Mengirim true jika C1 di dalam C2 atau C2 di dalam C1 */
 /* NOTE: Tidak berpotongan/ bersinggungan */
 
 boolean IsCIRCLESTangents(CIRCLE C1, CIRCLE C2) {
-    return true;
+    float distance = Panjang(Center(C1), Center(C2));
+
+    return (distance == fabs(C1.R - C2.R) || distance == C1.R + C2.R);
 };
 /* Mengirim true jika C1 bersinggungan di 1 titik dengan C2 */
 /**
@@ -101,8 +102,12 @@ boolean IsCIRCLESTangents(CIRCLE C1, CIRCLE C2) {
  */
 
 boolean IsCIRCLESIntersects(CIRCLE C1, CIRCLE C2) {
-    return true;
-};
+    float distanceBetweenCenters = Panjang(Center(C1), Center(C2));
+    float sumRadius = C1.R + C2.R;
+    float diffRadius = fabs(C1.R - C2.R);
+    return (distanceBetweenCenters < sumRadius) && (distanceBetweenCenters > diffRadius);
+}
+
 /* Mengirim true jika C1 berpotongan di 2 titik dengan C2 */
 
 /* ***************************************************************** */

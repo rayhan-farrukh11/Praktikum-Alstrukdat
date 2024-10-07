@@ -1,31 +1,6 @@
 # include "liststatik.h"
 #include <stdio.h>
 
-ListStatik createSet(ListStatik l){
-    ListStatik set;
-    boolean duplicate;
-    int i,j;
-    CreateListStatik(&set);
-    for (i=0;i < listLength(l); i++){
-    duplicate = false;
-    for (j = 0; j < listLength(set);j++){
-        if (l.contents[i] == set.contents[j]){duplicate = true;}}
-    if (!duplicate) {
-        insertLast(&set,l.contents[i]);
-    }
-}
-    return set;
-}
-
-int countVal(ListStatik l, ElType val) {
-      int i;
-      int count = 0;
-      for (i=0;i<listLength(l);i++){
-            if (l.contents[i] == val) count++;
-      }
-      return count;
-};
-
 int main(){
     ListStatik l, setL;
     int i, j, count, maxCount, secndMaxCount;

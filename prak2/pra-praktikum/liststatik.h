@@ -171,4 +171,10 @@ void sortList(ListStatik *l, boolean asc);
 /* Proses : Mengurutkan l dengan salah satu algoritma sorting,
    algoritma bebas */
 
+int countVal(ListStatik l, ElType val);
+// Menghitung banyanknya kemunculan suatu nilai pada list
+
+ListStatik createSet(ListStatik l);
+// Membentuk list baru tanpa duplikat
+
 #endif
